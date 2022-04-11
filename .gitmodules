@@ -1,0 +1,3 @@
+[submodule "vqa-maskrcnn-benchmark"]
+	path = vqa-maskrcnn-benchmark
+	url = https://gitlab.com/vedanuj/vqa-maskrcnn-benchmark.git
