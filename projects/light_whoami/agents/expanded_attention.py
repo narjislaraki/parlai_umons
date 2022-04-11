@@ -401,6 +401,7 @@ class ExpandedDecoderAttentionAgent(TransformerGeneratorAgent):
         """
         Overrides TGA.batchify to add expanded input vec.
         """
+        print("je passe dans expanded attention")
         batch = super().batchify(obs_batch, sort)
         valid_exs = [ex for ex in obs_batch if self.is_valid(ex)]
         batch.expanded_attn_input_vec = None

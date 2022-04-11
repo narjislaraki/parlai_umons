@@ -55,6 +55,7 @@ class _GenericWizardAgent(TransformerGeneratorAgent):
         return parser
 
     def batchify(self, obs_batch):
+        print("je passe dans agents")
         batch = super().batchify(obs_batch)
         reordered_observations = [obs_batch[i] for i in batch.valid_indices]
 

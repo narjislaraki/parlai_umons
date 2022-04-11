@@ -127,6 +127,7 @@ class HredAgent(TorchGeneratorAgent):
         Add action and attribute supervision for batches.
 
         Store history vec as context_vec.
+    
         """
         # NOTE: `sort` is set to True here (Default is False in TorchGeneratorAgent)
         # TODO: Sorting the batch will result in various local metrics being broadcasted

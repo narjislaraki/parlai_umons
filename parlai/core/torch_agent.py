@@ -1659,6 +1659,7 @@ class TorchAgent(ABC, Agent):
             true when using torch.nn.utils.rnn.pack_padded_sequence.  Uses the text
             vectors if available, otherwise uses the label vectors if available.
         """
+
         if len(obs_batch) == 0:
             return Batch(batchsize=0)
 
@@ -1668,7 +1669,6 @@ class TorchAgent(ABC, Agent):
             return Batch(batchsize=0)
 
         valid_inds, exs = zip(*valid_obs)
-
         # TEXT
         xs = x_lens = context_original_lengths = None
         context_truncate_rate = context_truncated_lengths = None

@@ -506,6 +506,7 @@ class RagAgent(TransformerGeneratorRagAgent, BartRagAgent, T5RagAgent):
         """
         Override TA.batchify to incorporate query and input turn vecs.
         """
+        print("je passe dans rag.py")
         assert not sort
         if len(obs_batch) == 0:
             return Batch(batchsize=0)

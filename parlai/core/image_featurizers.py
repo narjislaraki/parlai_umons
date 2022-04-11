@@ -56,7 +56,7 @@ class ImageLoader:
     def __init__(self, opt):
         self.opt = opt.copy()
         self.use_cuda = False
-        self.netCNN = None
+        self.netCNN = None #check
         self.image_mode = opt.get('image_mode', 'no_image_model')
         self.use_cuda = not self.opt.get('no_cuda', False) and torch.cuda.is_available()
         if self.image_mode not in ['no_image_model', 'raw', 'ascii']:
@@ -73,6 +73,7 @@ class ImageLoader:
             elif 'resnext' in self.image_mode:
                 self._init_resnext_cnn()
             elif 'faster_r_cnn_152_32x8d' in self.image_mode:
+                print("hello")
                 self._init_faster_r_cnn()
             else:
                 raise RuntimeError(
@@ -100,7 +101,7 @@ class ImageLoader:
 
         self.transform = self.transforms.Compose(
             [
-                self.transforms.Scale(self.image_size),
+                self.transforms.Resize(self.image_size),
                 self.transforms.CenterCrop(self.crop_size),
                 self.transforms.ToTensor(),
                 self.transforms.Normalize(
@@ -126,6 +127,7 @@ class ImageLoader:
 
         if self.use_cuda:
             self.netCNN.cuda()
+            self.netCNN.eval()
 
     def _init_resnext_cnn(self):
         """
@@ -292,7 +294,8 @@ class DetectronFeatureExtractor:
             self.cv2 = cv2
         except ImportError:
             raise ImportError("Please install opencv: pip install opencv-python")
-        try:
+        
+        try:            
             import maskrcnn_benchmark  # noqa
         except ImportError:
             raise ImportError(
@@ -302,6 +305,8 @@ class DetectronFeatureExtractor:
                 '3. git checkout 4c168a637f45dc69efed384c00a7f916f57b25b8 -b stable\n'
                 '4. python setup.py develop'
             )
+            
+        
         self._build_detection_model()
 
     def _build_detection_model(self):

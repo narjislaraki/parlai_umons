@@ -105,19 +105,29 @@ class SafeLocalHumanAgent(LocalHumanAgent):
         reply_text = input(colorize('Enter Your Message:', 'field') + ' ')
         reply_text = reply_text.replace('\\n', '\n')
 
+
         return reply_text
 
     def act(self):
+        import torch
         # get human reply
+        from parlai.core.image_featurizers import ImageLoader
+        imgLoader = ImageLoader(opt=self.opt)
+        img = imgLoader.load('/home/DelbrouckJB/narjis/ParlAI/projects/multimodal_blenderbot/bear2.PNG')
+        print(img._grad) # -> doit être None
+        print(imgLoader.netCNN.detection_model.training) # -> doit être false
         reply = Message(
             {
                 'id': self.getID(),
                 'label_candidates': self.fixedCands_txt,
                 'episode_done': False,
+                'image':  img
             }
         )
+        print(torch.sum(img))
         reply_text = self.get_reply()
 
+    
         # check if human reply is offensive
         self.self_offensive = self.check_offensive(reply_text)
         while self.self_offensive:
@@ -131,7 +141,7 @@ class SafeLocalHumanAgent(LocalHumanAgent):
             raise StopIteration
 
         # set reply text
-        reply['text'] = reply_text
+        reply['text'] = reply_text #here
 
         # check if finished
         if '[EXIT]' in reply_text:

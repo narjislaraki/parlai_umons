@@ -65,10 +65,12 @@ class InteractiveWorld(DialogPartnerWorld):
 
         acts = self.acts
         agents = self.agents
+        #here
         if self.turn_cnt == 0 and self.p1 != '':
             # add the context on to the first message to agent 0
             context_act = Message(
-                {'id': 'context', 'text': self.p1, 'episode_done': False}
+                {'id': 'context', 'text': self.p1,
+                'episode_done': False}
             )
             agents[0].observe(validate(context_act))
         try:

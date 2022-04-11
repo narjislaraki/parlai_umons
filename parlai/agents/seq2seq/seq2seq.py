@@ -212,6 +212,7 @@ class Seq2seqAgent(TorchGeneratorAgent):
         # TODO: Sorting the batch will result in various local metrics being broadcasted
         # back to individual examples in the wrong order, such as the lengths of
         # the context and labels. Aggregate metric reports will still be accurate.
+        print("je passe dans seq2seq")
         return super().batchify(*args, **kwargs)
 
     def state_dict(self):
