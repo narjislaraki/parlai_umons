@@ -254,8 +254,8 @@ class ContextWithImageEncoder(TransformerEncoder):
 
         Essentially overrides normal TransformerEncoder forward.
         """
-
-        print(torch.sum(image_features[0]))
+        print(image_features[0])
+        print(print (image_features[0]))
         context_tensor = context_mask = None
         image_tensor = image_mask = None
         if src_tokens is not None and image_features is not None:
