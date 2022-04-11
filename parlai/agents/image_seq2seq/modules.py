@@ -233,7 +233,6 @@ class ContextWithImageEncoder(TransformerEncoder):
             A (full_enc, full_mask) tuple, which represents the encoded context
             and the mask
         """
-        print("here")
         print(torch.sum(image_features[0]))
         if self.fusion is FusionType.LATE:
             return self._forward_late_fusion(src_tokens, image_features)

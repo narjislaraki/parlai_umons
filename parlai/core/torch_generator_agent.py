@@ -300,7 +300,6 @@ class TorchGeneratorModel(nn.Module, ABC):
               Feed this back in to skip encoding on the next call.
         """
 
-        print("forward!!!!!!!!!!!!")
         assert ys is not None, "Greedy decoding in TGModel.forward no longer supported."
         # TODO: get rid of longest_label
         # keep track of longest label we've ever seen
@@ -862,7 +861,6 @@ class TorchGeneratorAgent(TorchAgent, ABC):
         """
         Evaluate a single batch of examples.
         """
-        print(batch)
         if batch.text_vec is None and batch.image is None:
             return
         if batch.text_vec is not None:
@@ -1137,7 +1135,6 @@ class TorchGeneratorAgent(TorchAgent, ABC):
         if isinstance(model, torch.nn.parallel.DistributedDataParallel):
             model = self.model.module
         encoder_states = model.encoder(*self._encoder_input(batch))
-        print(batch['image'])
         print(torch.sum(batch['image'][0]))
         if batch.text_vec is not None:
             dev = batch.text_vec.device

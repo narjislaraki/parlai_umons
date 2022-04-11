@@ -114,8 +114,7 @@ class SafeLocalHumanAgent(LocalHumanAgent):
         from parlai.core.image_featurizers import ImageLoader
         imgLoader = ImageLoader(opt=self.opt)
         img = imgLoader.load('/home/DelbrouckJB/narjis/ParlAI/projects/multimodal_blenderbot/bear2.PNG')
-        print(img._grad) # -> doit être None
-        print(imgLoader.netCNN.detection_model.training) # -> doit être false
+    
         reply = Message(
             {
                 'id': self.getID(),

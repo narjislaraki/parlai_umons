@@ -136,7 +136,6 @@ class ImageSeq2seqAgent(TransformerGeneratorAgent, TorchImageAgent):
         )
 
     def _model_input(self, batch: Batch) -> Tuple[torch.Tensor, List[object]]:
-        print("here")
         return (batch.text_vec, batch.image)
 
     def load_state_dict(self, state_dict: Dict[str, torch.Tensor]):

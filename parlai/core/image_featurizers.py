@@ -73,7 +73,6 @@ class ImageLoader:
             elif 'resnext' in self.image_mode:
                 self._init_resnext_cnn()
             elif 'faster_r_cnn_152_32x8d' in self.image_mode:
-                print("hello")
                 self._init_faster_r_cnn()
             else:
                 raise RuntimeError(
@@ -127,7 +126,6 @@ class ImageLoader:
 
         if self.use_cuda:
             self.netCNN.cuda()
-            self.netCNN.eval()
 
     def _init_resnext_cnn(self):
         """
@@ -165,6 +163,7 @@ class ImageLoader:
         Initialize Detectron Model.
         """
         self.netCNN = DetectronFeatureExtractor(self.opt, self.use_cuda)
+
 
     def _image_mode_switcher(self):
         if self.image_mode not in IMAGE_MODE_SWITCHER:
