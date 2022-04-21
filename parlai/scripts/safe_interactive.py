@@ -56,6 +56,7 @@ def safe_interactive(opt):
     human_agent = SafeLocalHumanAgent(opt)
     world = create_task(opt, [human_agent, agent])
 
+    world.parley(True)  
     # Interact until episode done
     while True:
         world.parley()

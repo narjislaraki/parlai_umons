@@ -54,7 +54,7 @@ class InteractiveWorld(DialogPartnerWorld):
         if not self.epoch_done():
             print("\n... preparing new chat... \n")
 
-    def parley(self):
+    def parley(self, first_message=False):
         """
         Agent 0 goes first.
 
@@ -65,7 +65,6 @@ class InteractiveWorld(DialogPartnerWorld):
 
         acts = self.acts
         agents = self.agents
-        #here
         if self.turn_cnt == 0 and self.p1 != '':
             # add the context on to the first message to agent 0
             context_act = Message(
@@ -74,7 +73,7 @@ class InteractiveWorld(DialogPartnerWorld):
             )
             agents[0].observe(validate(context_act))
         try:
-            act = deepcopy(agents[0].act())
+            act = deepcopy(agents[0].act(first_message))
         except StopIteration:
             self.reset()
             self.finalize_episode()

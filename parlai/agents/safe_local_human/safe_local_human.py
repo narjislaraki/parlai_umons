@@ -108,7 +108,7 @@ class SafeLocalHumanAgent(LocalHumanAgent):
 
         return reply_text
 
-    def act(self):
+    def act(self, first_message=False):
         import torch
         # get human reply
         from parlai.core.image_featurizers import ImageLoader
@@ -123,8 +123,13 @@ class SafeLocalHumanAgent(LocalHumanAgent):
                 'image':  img
             }
         )
-        print(torch.sum(img))
-        reply_text = self.get_reply()
+
+        if first_message:
+            reply_text = ' ' #print?
+
+        else : 
+        # print(torch.sum(img))
+            reply_text = self.get_reply()
 
     
         # check if human reply is offensive
