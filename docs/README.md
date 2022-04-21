@@ -1,3 +1,6 @@
+# The repository
+
+To clone the project, you must add **--recursive** at the end of the command.
 
 # The environment 
 
