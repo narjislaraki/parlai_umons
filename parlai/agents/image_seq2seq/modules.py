@@ -233,7 +233,6 @@ class ContextWithImageEncoder(TransformerEncoder):
             A (full_enc, full_mask) tuple, which represents the encoded context
             and the mask
         """
-        print(torch.sum(image_features[0]))
         if self.fusion is FusionType.LATE:
             return self._forward_late_fusion(src_tokens, image_features)
         elif self.fusion is FusionType.EARLY:
@@ -254,8 +253,12 @@ class ContextWithImageEncoder(TransformerEncoder):
 
         Essentially overrides normal TransformerEncoder forward.
         """
+        """
+        print("-------------")
         print(image_features[0])
-        print(print (image_features[0]))
+        print("-------------")
+        print(torch.sum(image_features[0][0]))
+        """
         context_tensor = context_mask = None
         image_tensor = image_mask = None
         if src_tokens is not None and image_features is not None:

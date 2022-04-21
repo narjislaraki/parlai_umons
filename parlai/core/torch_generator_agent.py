@@ -1135,7 +1135,6 @@ class TorchGeneratorAgent(TorchAgent, ABC):
         if isinstance(model, torch.nn.parallel.DistributedDataParallel):
             model = self.model.module
         encoder_states = model.encoder(*self._encoder_input(batch))
-        print(torch.sum(batch['image'][0]))
         if batch.text_vec is not None:
             dev = batch.text_vec.device
         else:
