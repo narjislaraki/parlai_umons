@@ -111,7 +111,8 @@ class SafeLocalHumanAgent(LocalHumanAgent):
     def act(self, first_message=False):
         import torch
         # get human reply
-        from parlai.core.image_featurizers import ImageLoader
+        from parlai.core.image_featurizers import ImageLoader #important
+        print(self.opt)
         imgLoader = ImageLoader(opt=self.opt)
         img = imgLoader.load('/home/DelbrouckJB/narjis/ParlAI/projects/multimodal_blenderbot/bear2.PNG')
     

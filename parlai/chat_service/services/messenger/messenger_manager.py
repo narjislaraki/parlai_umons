@@ -120,7 +120,7 @@ class MessengerManager(ChatServiceManager):
         self._log_debug('Messages {} marked as read.'.format(event['read']))
         super()._handle_message_read(event)
 
-    def _handle_webhook_event(self, event):
+    def _handle_webhook_event(self, event): #important
         if 'message' in event:
             if ('image_url' in event and event['image_url'] is not None) or (
                 'attachment_url' in event and event['attachment_url'] is not None

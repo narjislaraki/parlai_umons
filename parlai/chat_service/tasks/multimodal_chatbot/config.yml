@@ -1,0 +1,28 @@
+tasks:
+  default:
+    onboard_world: MessengerBotChatOnboardWorld
+    task_world: MessengerBotChatTaskWorld
+    timeout: 1800
+    agents_required: 1
+task_name: multimodal_chatbot
+world_module: parlai.chat_service.tasks.multimodal_chatbot.worlds
+overworld: MessengerOverworld
+max_workers: 30
+opt:
+  debug: True
+  models:
+    multimodal_blenderbot:
+      model: projects.multimodal_blenderbot.agents:BiasAgent
+      t: blended_skill_talk
+      model_file: /home/DelbrouckJB/narjis/mmb_degenpos/model
+      interactive_mode: True
+      image-mode: faster_r_cnn_152_32x8d
+      beam-block-ngram: 3
+      beam-context-block-ngram: 3
+      beam-min-length: 20
+      beam-size: 10
+      inference: beam
+      model-parallel: False
+      no_cuda: True
+additional_args:
+  page_id: 1 # Configure Your Own Page

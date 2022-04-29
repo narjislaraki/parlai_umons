@@ -71,6 +71,9 @@ WEB_HTML = """
                             Restart Conversation
                           </button>
                         </p>
+                        <p class="control">
+                           <input type="file" id="fileUpload" accept="image/png, image/jpg, image/jpeg"/>
+                        </p>
                       </div>
                   </form>
                 </div>
@@ -122,21 +125,36 @@ WEB_HTML = """
 
                 return article;
             }}
+            var image_input = document.getElementById("fileUpload");
+            var uploaded_image = ""
+
+            image_input.addEventListener("change", function(){{
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {{
+                    uploaded_image = reader.result;
+                    console.log(uploaded_image)
+                }})
+                reader.readAsDataURL(this.files[0]);
+            }})
+
             document.getElementById("interact").addEventListener("submit", function(event){{
                 event.preventDefault()
                 var text = document.getElementById("userIn").value;
                 document.getElementById('userIn').value = "";
-
+                let data = {{'text': text, 'image': uploaded_image}}
+                console.log(data)
                 fetch('/interact', {{
                     headers: {{
                         'Content-Type': 'application/json'
                     }},
                     method: 'POST',
-                    body: text
+                    body: JSON.stringify(data)
                 }}).then(response=>response.json()).then(data=>{{
                     var parDiv = document.getElementById("parent");
 
+                    
                     parDiv.append(createChatRow("You", text));
+                    
 
                     // Change info for Model response
                     parDiv.append(createChatRow("Model", data.text));

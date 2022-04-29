@@ -13,6 +13,7 @@ from parlai.core.opt import Opt
 import parlai.utils.logging as logging
 from parlai.utils.io import PathManager
 from parlai.zoo.detectron.build import build
+from parlai.core.params import ParlaiParser
 
 import os
 from PIL import Image
@@ -57,14 +58,16 @@ class ImageLoader:
         self.opt = opt.copy()
         self.use_cuda = False
         self.netCNN = None #check
+        print("opt ------->", opt)
         self.image_mode = opt.get('image_mode', 'no_image_model')
+        print("image_featurizeres image mode --->", self.image_mode)
         self.use_cuda = not self.opt.get('no_cuda', False) and torch.cuda.is_available()
         if self.image_mode not in ['no_image_model', 'raw', 'ascii']:
-            if 'image_mode' not in opt or 'image_size' not in opt:
+            if 'image_mode' not in opt or 'image_size' not in opt: 
                 raise RuntimeError(
                     'Need to add image arguments to opt. See '
                     'parlai.core.params.ParlaiParser.add_image_args'
-                )
+                )        
             self.image_size = opt['image_size']
             self.crop_size = opt['image_cropsize']
             self._init_transform()
@@ -73,6 +76,7 @@ class ImageLoader:
             elif 'resnext' in self.image_mode:
                 self._init_resnext_cnn()
             elif 'faster_r_cnn_152_32x8d' in self.image_mode:
+                print("faster in on ! ")
                 self._init_faster_r_cnn()
             else:
                 raise RuntimeError(

@@ -64,8 +64,18 @@ class WebsocketManager(ChatServiceManager):
         self.messenger_agent_states = {}
         self.agent_id_to_overworld_future = {}
         self.task_to_agent_ids = {}
+        self._replace_underscore()
         self._load_model()
 
+    def _replace_underscore(self):
+        for model in self.opt['models']:
+            model_opt = self.opt['models'][model]
+            for opt in list(model_opt):
+                if '-' in opt:
+                    new_opt = opt.replace('-', '_')
+                    model_opt[new_opt] = model_opt.pop(opt)
+            self.opt['models'][model] = model_opt
+            
     def _load_model(self):
         """
         Load model if necessary.
@@ -258,6 +268,7 @@ class WebsocketManager(ChatServiceManager):
 
         Returns a tornado future for tracking the `write_message` action.
         """
+        print("je passe dans observe_payload !")
         message = {'text': '', 'payload': payload, 'quick_replies': quick_replies}
         payload = json.dumps(message)
 

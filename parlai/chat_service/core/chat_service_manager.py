@@ -409,6 +409,7 @@ class ChatServiceManager(ABC):
         :param message:
             message to put on queue
         """
+        print("MESSAGE IN ON NEW MESSAGE : ", message, "\n")
         message = self.restructure_message(message)
         agent_id = message['sender']['id']
         if not self.world_runner.is_initialized():
