@@ -37,7 +37,12 @@ WEB_HTML = """
 <html>
     <link rel="stylesheet" href={} />
     <script defer src={}></script>
-    <head><title> Interactive Run </title></head>
+    <head>
+        <title>
+            Interactive Run 
+        </title>
+       
+    </head>
     <body>
         <div class="columns" style="height: 100%">
             <div class="column is-three-fifths is-offset-one-fifth">
@@ -55,7 +60,7 @@ WEB_HTML = """
                       </div>
                     </article>
                 </div>
-                <div class="hero-foot column is-three-fifths is-offset-one-fifth" style="height: 76px">
+                <div class="hero-foot column is-11 is-offset-1" style="height: 76px">
                   <form id = "interact">
                       <div class="field is-grouped">
                         <p class="control is-expanded">
@@ -71,9 +76,20 @@ WEB_HTML = """
                             Restart Conversation
                           </button>
                         </p>
-                        <p class="control">
-                           <input type="file" id="fileUpload" accept="image/png, image/jpg, image/jpeg"/>
-                        </p>
+                   
+                        <div id="file_div" class="file">
+                            <label class="file-label">
+                                <input class="file-input" id="fileUpload" type="file" name="resume" accept="image/png, image/jpg, image/jpeg">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-text">
+                                        Choose a file...
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
                       </div>
                   </form>
                 </div>
@@ -131,9 +147,11 @@ WEB_HTML = """
             image_input.addEventListener("change", function(){{
                 const reader = new FileReader();
                 reader.addEventListener("load", () => {{
-                    uploaded_image = reader.result;
-                    console.log(uploaded_image)
+                    uploaded_image = reader.result.split(',')[1];;
                 }})
+                document.getElementById('userIn').disabled = true;
+                const fileName = document.querySelector('#file_div .file-text');
+                fileName.textContent = this.files[0].name;
                 reader.readAsDataURL(this.files[0]);
             }})
 
@@ -141,8 +159,8 @@ WEB_HTML = """
                 event.preventDefault()
                 var text = document.getElementById("userIn").value;
                 document.getElementById('userIn').value = "";
+
                 let data = {{'text': text, 'image': uploaded_image}}
-                console.log(data)
                 fetch('/interact', {{
                     headers: {{
                         'Content-Type': 'application/json'
@@ -154,11 +172,14 @@ WEB_HTML = """
 
                     
                     parDiv.append(createChatRow("You", text));
-                    
 
                     // Change info for Model response
                     parDiv.append(createChatRow("Model", data.text));
                     parDiv.scrollTo(0, parDiv.scrollHeight);
+                    uploaded_image = "";
+                    document.getElementById("fileUpload").value = ""
+                    document.getElementById('userIn').disabled = false;
+
                 }})
             }});
             document.getElementById("interact").addEventListener("reset", function(event){{

@@ -53,7 +53,6 @@ class BrowserHandler(BaseHTTPRequestHandler):
         if self.path == '/interact':
             content_length = int(self.headers['Content-Length'])
             body = self.rfile.read(content_length)
-            print(body)
             self._interactive_running(body)
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -66,7 +65,9 @@ class BrowserHandler(BaseHTTPRequestHandler):
             json_str = json.dumps(model_response)
             self.wfile.write(bytes(json_str, 'utf-8'))
         elif self.path == '/reset':
-            self._interactive_running(b"[RESET]")
+            content_length = int(self.headers['Content-Length'])
+            body = self.rfile.read(content_length)
+            self._interactive_running(body)
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()

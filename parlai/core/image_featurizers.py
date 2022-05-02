@@ -76,7 +76,6 @@ class ImageLoader:
             elif 'resnext' in self.image_mode:
                 self._init_resnext_cnn()
             elif 'faster_r_cnn_152_32x8d' in self.image_mode:
-                print("faster in on ! ")
                 self._init_faster_r_cnn()
             else:
                 raise RuntimeError(

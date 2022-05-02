@@ -57,7 +57,7 @@ class WebsocketAgent(ChatServiceAgent):
             img_attempt = True
         return img_attempt
 
-
+    
     def put_data(self, message):
         """
         Put data into the message queue.
@@ -66,30 +66,30 @@ class WebsocketAgent(ChatServiceAgent):
             message: dict. An incoming websocket message. See the chat_services
                 README for the message structure.
         """
-        # Mettre ça plutôt quand on appelle put_data ?
-        from parlai.core.image_featurizers import ImageLoader #important
-        imgLoader = ImageLoader(opt=self.opt['config']['world_opt']['models']['multimodal_blenderbot'])
-        img = imgLoader.load('/home/DelbrouckJB/narjis/ParlAI/projects/multimodal_blenderbot/bear2.PNG')
-        logging.info(f"Received new message: {message}")
-        img_attempt = self._is_image_attempt(message)
         import json
-        body = json.loads(message.get('text','{}'))
-        print("body -------->", body)
+        from parlai.core.image_featurizers import ImageLoader #important
+        from parlai.chat_service.utils.image import ImageInformation
+        
+        logging.info(f"Received new message: {message}")
+        
+        body = json.loads(message.get('text',{}))
+    
         action = {
             'episode_done': False,
             'text': body.get('text', ''),
-            #'image': body.get('image', '')
         }
+
+        body_image = body.get('image', '')
+        if body_image != '':        
+            imgLoader = ImageLoader(opt=self.opt['config']['world_opt']['models']['multimodal_blenderbot'])
+            img_info = ImageInformation('', '', body_image)
+            img_path = "/home/DelbrouckJB/narjis/ParlAI/parlai/chat_service/data/image_chat.jpeg"
+            img_info.save_picture(img_path)
+            action['text'] = ''
+            action['image'] = imgLoader.load(img_path)
+
+
         self._queue_action(action, self.action_id)
         self.action_id += 1
-
-'''
-        if img_attempt:
-            action['image_url'] = message.get('image_url')
-            action['attachment_url'] = message.get('attachment_url')
-            if action['image_url'] is None:
-                payload = message['attachments'][0].get('payload', {})
-                action['image_url'] = payload.get('url')
-            action['image'] = action['image_url'] or action['attachment_url']
-'''         
+     
        

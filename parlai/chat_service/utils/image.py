@@ -18,6 +18,9 @@ from parlai.core.params import ParlaiParser
 from parlai.utils.typing import TShared
 
 
+def save_and_load_image(image):
+    blablabla
+
 class ImageLicense(object):
     """
     Representation of image license information.
@@ -66,6 +69,7 @@ class ImageInformation(object):
         self._image_location_id = image_location_id
         self._image = image
         if isinstance(self._image, str):
+            print("we're decoding this shit")
             self._image = PIL.Image.open(io.BytesIO(base64.b64decode(self._image)))
 
     def get_image_id(self) -> str:
@@ -94,6 +98,8 @@ class ImageInformation(object):
             "image": serialized,
         }
 
+    def save_picture(self, image_path):
+        self._image.save(image_path, 'jpeg')
 
 class ImageFeaturesGenerator(object):
     """
