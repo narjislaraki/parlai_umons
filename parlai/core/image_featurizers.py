@@ -58,9 +58,7 @@ class ImageLoader:
         self.opt = opt.copy()
         self.use_cuda = False
         self.netCNN = None #check
-        print("opt ------->", opt)
         self.image_mode = opt.get('image_mode', 'no_image_model')
-        print("image_featurizeres image mode --->", self.image_mode)
         self.use_cuda = not self.opt.get('no_cuda', False) and torch.cuda.is_available()
         if self.image_mode not in ['no_image_model', 'raw', 'ascii']:
             if 'image_mode' not in opt or 'image_size' not in opt: 

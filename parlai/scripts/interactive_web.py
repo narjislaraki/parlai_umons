@@ -97,8 +97,11 @@ WEB_HTML = """
             </div>
         </div>
 
+
         <script>
-            function createChatRow(agent, text) {{
+            var img_path = ""
+
+            function createChatRow(agent, text, image=false) {{
                 var article = document.createElement("article");
                 article.className = "media"
 
@@ -116,20 +119,31 @@ WEB_HTML = """
 
                 var content = document.createElement("div");
                 content.className = "content";
+                                    
+                var figure_img = ""
+                if (image){{
+                    figure_img = document.createElement("figure")
+                    figure_img.width="190px"
+                    figure_img.height= "auto"
+                    var img = document.createElement("img")
+                    img.src = img_path
+                    figure_img.appendChild(img)
+                    content.appendChild(figure_img)
+                }}    
+                else {{
+                    var para = document.createElement("p");
+                    var paraText = document.createTextNode(text);
+                    var strong = document.createElement("strong");
+                    strong.innerHTML = agent;
+                    var br = document.createElement("br");
+                    para.appendChild(strong);
+                    para.appendChild(br);
+                    para.appendChild(paraText);
+                    content.appendChild(para);
+                }}           
 
-                var para = document.createElement("p");
-                var paraText = document.createTextNode(text);
-
-                var strong = document.createElement("strong");
-                strong.innerHTML = agent;
-                var br = document.createElement("br");
-
-                para.appendChild(strong);
-                para.appendChild(br);
-                para.appendChild(paraText);
-                content.appendChild(para);
+               
                 media.appendChild(content);
-
                 span.appendChild(icon);
                 figure.appendChild(span);
 
@@ -141,13 +155,14 @@ WEB_HTML = """
 
                 return article;
             }}
-            var image_input = document.getElementById("fileUpload");
-            var uploaded_image = ""
 
+            var image_input = document.getElementById("fileUpload");
+            var uploaded_image = "";
             image_input.addEventListener("change", function(){{
                 const reader = new FileReader();
                 reader.addEventListener("load", () => {{
-                    uploaded_image = reader.result.split(',')[1];;
+                    img_path = reader.result;
+                    uploaded_image = reader.result.split(',')[1];
                 }})
                 document.getElementById('userIn').disabled = true;
                 const fileName = document.querySelector('#file_div .file-text');
@@ -169,15 +184,23 @@ WEB_HTML = """
                     body: JSON.stringify(data)
                 }}).then(response=>response.json()).then(data=>{{
                     var parDiv = document.getElementById("parent");
-
                     
-                    parDiv.append(createChatRow("You", text));
+                    if (uploaded_image){{
+                        parDiv.append(createChatRow("You", text, true));
 
+                    }}
+                    else {{
+                        parDiv.append(createChatRow("You", text));
+
+                    }}
                     // Change info for Model response
                     parDiv.append(createChatRow("Model", data.text));
                     parDiv.scrollTo(0, parDiv.scrollHeight);
+                    
+                    // reset values
                     uploaded_image = "";
-                    document.getElementById("fileUpload").value = ""
+                    img_path = "";
+                    document.getElementsByClassName("file-text")[0].innerHTML = "Choose a file...";
                     document.getElementById('userIn').disabled = false;
 
                 }})

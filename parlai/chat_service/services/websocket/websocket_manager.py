@@ -268,7 +268,6 @@ class WebsocketManager(ChatServiceManager):
 
         Returns a tornado future for tracking the `write_message` action.
         """
-        print("je passe dans observe_payload !")
         message = {'text': '', 'payload': payload, 'quick_replies': quick_replies}
         payload = json.dumps(message)
 

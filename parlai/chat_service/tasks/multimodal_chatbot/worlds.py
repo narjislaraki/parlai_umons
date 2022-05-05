@@ -58,7 +58,6 @@ class MessengerBotChatTaskWorld(World):
     def parley(self):
         
         if self.first_time:
-            print("agent : ", self.agent)
             self.agent.observe(
                 {
                     'id': 'World',
