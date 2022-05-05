@@ -29,3 +29,19 @@ python parlai/scripts/safe_interactive.py -t blended_skill_talk -mf ${PATH_TO_YO
 ```
 
 The chatbot uses the bear2 image located in projects/multimodal_blenderbot, you can put another picture directly in the code by modifying the path at parlAI/agents/safe_local_human/safe_local_human.py line 116 
+
+
+# Talk to the chatbot on your browser 
+
+To talk to your mmb chatbot, run the following commands : 
+
+```bash
+cd ~/narjis/ParlAI/parlai/chat_service/services/browser_chat/ 
+
+python run.py --config-path ../../tasks/multimodal_chatbot/config.yml --port ${PORT}
+```
+And in another terminal :
+
+```bash
+python client.py --port ${PORT}
+```
