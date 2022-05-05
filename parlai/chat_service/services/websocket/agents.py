@@ -44,6 +44,20 @@ class WebsocketAgent(ChatServiceAgent):
         else:
             self.manager.observe_message(self.id, act['text'], quick_replies)
 
+    def _is_image_attempt(self, message):
+        """
+        Determine if a message is an image attempt.
+
+        The API changes frequently so could be an image for a number of reasons.
+        """
+        img_attempt = False
+        if 'attachments' in message:
+            img_attempt = message['attachments'][0]['type'] == 'image'
+        elif 'image' in message:
+            img_attempt = True
+        return img_attempt
+
+    
     def put_data(self, message):
         """
         Put data into the message queue.
@@ -52,12 +66,30 @@ class WebsocketAgent(ChatServiceAgent):
             message: dict. An incoming websocket message. See the chat_services
                 README for the message structure.
         """
+        import json
+        from parlai.core.image_featurizers import ImageLoader #important
+        from parlai.chat_service.utils.image import ImageInformation
+        
         logging.info(f"Received new message: {message}")
+        
+        body = json.loads(message.get('text',{}))
+    
         action = {
             'episode_done': False,
-            'text': message.get('text', ''),
-            'payload': message.get('payload'),
+            'text': body.get('text', ''),
         }
+
+        body_image = body.get('image', '')
+        if body_image != '':        
+            imgLoader = ImageLoader(opt=self.opt['config']['world_opt']['models']['multimodal_blenderbot'])
+            img_info = ImageInformation('', '', body_image)
+            img_path = "/home/DelbrouckJB/narjis/ParlAI/parlai/chat_service/data/image_chat.jpeg"
+            img_info.save_picture(img_path)
+            action['text'] = ''
+            action['image'] = imgLoader.load(img_path)
+
 
         self._queue_action(action, self.action_id)
         self.action_id += 1
+     
+       

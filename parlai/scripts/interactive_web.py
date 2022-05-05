@@ -37,7 +37,12 @@ WEB_HTML = """
 <html>
     <link rel="stylesheet" href={} />
     <script defer src={}></script>
-    <head><title> Interactive Run </title></head>
+    <head>
+        <title>
+            Interactive Run 
+        </title>
+       
+    </head>
     <body>
         <div class="columns" style="height: 100%">
             <div class="column is-three-fifths is-offset-one-fifth">
@@ -55,7 +60,7 @@ WEB_HTML = """
                       </div>
                     </article>
                 </div>
-                <div class="hero-foot column is-three-fifths is-offset-one-fifth" style="height: 76px">
+                <div class="hero-foot column is-11 is-offset-1" style="height: 76px">
                   <form id = "interact">
                       <div class="field is-grouped">
                         <p class="control is-expanded">
@@ -71,6 +76,20 @@ WEB_HTML = """
                             Restart Conversation
                           </button>
                         </p>
+                   
+                        <div id="file_div" class="file">
+                            <label class="file-label">
+                                <input class="file-input" id="fileUpload" type="file" name="resume" accept="image/png, image/jpg, image/jpeg">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-text">
+                                        Choose a file...
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
                       </div>
                   </form>
                 </div>
@@ -78,8 +97,11 @@ WEB_HTML = """
             </div>
         </div>
 
+
         <script>
-            function createChatRow(agent, text) {{
+            var img_path = ""
+
+            function createChatRow(agent, text, image=false) {{
                 var article = document.createElement("article");
                 article.className = "media"
 
@@ -97,20 +119,31 @@ WEB_HTML = """
 
                 var content = document.createElement("div");
                 content.className = "content";
+                                    
+                var figure_img = ""
+                if (image){{
+                    figure_img = document.createElement("figure")
+                    figure_img.width="190px"
+                    figure_img.height= "auto"
+                    var img = document.createElement("img")
+                    img.src = img_path
+                    figure_img.appendChild(img)
+                    content.appendChild(figure_img)
+                }}    
+                else {{
+                    var para = document.createElement("p");
+                    var paraText = document.createTextNode(text);
+                    var strong = document.createElement("strong");
+                    strong.innerHTML = agent;
+                    var br = document.createElement("br");
+                    para.appendChild(strong);
+                    para.appendChild(br);
+                    para.appendChild(paraText);
+                    content.appendChild(para);
+                }}           
 
-                var para = document.createElement("p");
-                var paraText = document.createTextNode(text);
-
-                var strong = document.createElement("strong");
-                strong.innerHTML = agent;
-                var br = document.createElement("br");
-
-                para.appendChild(strong);
-                para.appendChild(br);
-                para.appendChild(paraText);
-                content.appendChild(para);
+               
                 media.appendChild(content);
-
                 span.appendChild(icon);
                 figure.appendChild(span);
 
@@ -122,25 +155,54 @@ WEB_HTML = """
 
                 return article;
             }}
+
+            var image_input = document.getElementById("fileUpload");
+            var uploaded_image = "";
+            image_input.addEventListener("change", function(){{
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {{
+                    img_path = reader.result;
+                    uploaded_image = reader.result.split(',')[1];
+                }})
+                document.getElementById('userIn').disabled = true;
+                const fileName = document.querySelector('#file_div .file-text');
+                fileName.textContent = this.files[0].name;
+                reader.readAsDataURL(this.files[0]);
+            }})
+
             document.getElementById("interact").addEventListener("submit", function(event){{
                 event.preventDefault()
                 var text = document.getElementById("userIn").value;
                 document.getElementById('userIn').value = "";
 
+                let data = {{'text': text, 'image': uploaded_image}}
                 fetch('/interact', {{
                     headers: {{
                         'Content-Type': 'application/json'
                     }},
                     method: 'POST',
-                    body: text
+                    body: JSON.stringify(data)
                 }}).then(response=>response.json()).then(data=>{{
                     var parDiv = document.getElementById("parent");
+                    
+                    if (uploaded_image){{
+                        parDiv.append(createChatRow("You", text, true));
 
-                    parDiv.append(createChatRow("You", text));
+                    }}
+                    else {{
+                        parDiv.append(createChatRow("You", text));
 
+                    }}
                     // Change info for Model response
                     parDiv.append(createChatRow("Model", data.text));
                     parDiv.scrollTo(0, parDiv.scrollHeight);
+                    
+                    // reset values
+                    uploaded_image = "";
+                    img_path = "";
+                    document.getElementsByClassName("file-text")[0].innerHTML = "Choose a file...";
+                    document.getElementById('userIn').disabled = false;
+
                 }})
             }});
             document.getElementById("interact").addEventListener("reset", function(event){{

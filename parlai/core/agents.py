@@ -431,6 +431,9 @@ def add_datapath_and_model_args(opt: Opt):
     model = get_model_name(opt)
     if model is not None:
         parser.add_model_subargs(model, opt)
+    image_mode = opt.get('image_mode', None)
+    if image_mode is not None and image_mode != 'no_image_model':
+        parser.add_image_args(image_mode)
     opt_parser = parser.parse_args("")
     for k, v in opt_parser.items():
         if k not in opt:

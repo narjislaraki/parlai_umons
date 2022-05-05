@@ -94,6 +94,8 @@ class ImageInformation(object):
             "image": serialized,
         }
 
+    def save_picture(self, image_path):
+        self._image.save(image_path, 'jpeg')
 
 class ImageFeaturesGenerator(object):
     """

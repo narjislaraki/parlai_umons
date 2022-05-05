@@ -661,7 +661,6 @@ class MultiObjectiveGeneratorAgent(
         return observation
 
     def batchify(self, obs_batch: List[Message], sort: bool = False) -> Batch:
-        print("je passe dans multi_objective")
         batch = super().batchify(obs_batch, sort)
         valid_exs = [ex for ex in obs_batch if self.is_valid(ex)]
         batch.character_vec = None

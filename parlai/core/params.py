@@ -917,6 +917,7 @@ class ParlaiParser(argparse.ArgumentParser):
         Add more args depending on how known args are set.
         """
         parsed = vars(self.parse_known_args(args, nohelp=True)[0])
+       
         # Also load extra args options if a file is given.
         if parsed.get('init_opt') is not None:
             try:

@@ -10,6 +10,9 @@ Config Utils.
 import yaml
 from collections import namedtuple
 
+from parlai.core.params import ParlaiParser
+from parlai.scripts.safe_interactive import setup_args
+
 WorldConfig = namedtuple(
     "WorldConfig",
     [
@@ -66,7 +69,22 @@ def parse_configuration_file(config_path):
                 backup_task=configuration.get("backup_task"),
             )
         # get world options, additional args
-        result["world_opt"] = cfg.get("opt", {})
+        world_opt = cfg.get("opt",{})
+        '''
+        for model in world_opt['models']:
+            for arg in list(world_opt['models'][model]):
+                if '-' in arg:
+                    new_arg = arg.replace('-','_')
+                    world_opt['models'][model][new_arg] =  world_opt['models'][model].pop(arg)
+        
+        parser = setup_args()
+        parser.add_extra_args(world_opt['models']['multimodal_blenderbot'])
+        args = parser.parse_args(args=world_opt['models']['multimodal_blenderbot'])
+        for arg in world_opt['models']['multimodal_blenderbot']:
+            print(arg)
+        args.log()
+        '''
+        result["world_opt"] = world_opt
         result["additional_args"] = cfg.get("additional_args", {})
 
     return result
