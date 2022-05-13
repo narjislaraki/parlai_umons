@@ -96,6 +96,7 @@ class ImageInformation(object):
 
     def save_picture(self, image_path):
         self._image.save(image_path, 'jpeg')
+        self._image_location_id = image_path
 
 class ImageFeaturesGenerator(object):
     """

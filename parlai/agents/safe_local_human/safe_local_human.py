@@ -8,7 +8,7 @@ Agent that gets the local keyboard input in the act() function.
 
 Applies safety classifier(s) to process user and partner messages.
 """
-
+import torch
 from typing import Optional
 from parlai.core.params import ParlaiParser
 from parlai.core.opt import Opt
@@ -17,7 +17,7 @@ from parlai.utils.misc import display_messages
 from parlai.utils.strings import colorize
 from parlai.agents.local_human.local_human import LocalHumanAgent
 from parlai.utils.safety import OffensiveStringMatcher, OffensiveLanguageClassifier
-
+from parlai.core.image_featurizers import ImageLoader 
 
 OFFENSIVE_USER_REPLY = '[ Sorry, could not process that message. Please try again. ]'
 OFFENSIVE_BOT_REPLY = (
@@ -109,13 +109,11 @@ class SafeLocalHumanAgent(LocalHumanAgent):
         return reply_text
 
     def act(self, first_message=False):
-        import torch
-        # get human reply
-        from parlai.core.image_featurizers import ImageLoader #important
-        print(self.opt)
+        
         imgLoader = ImageLoader(opt=self.opt)
-        img = imgLoader.load('/home/DelbrouckJB/narjis/ParlAI/projects/multimodal_blenderbot/bear2.PNG')
-    
+        
+        
+        img = imgLoader.load('../../../projects/multimodal_blenderbot/bear2.PNG')
         reply = Message(
             {
                 'id': self.getID(),
@@ -126,10 +124,10 @@ class SafeLocalHumanAgent(LocalHumanAgent):
         )
 
         if first_message:
-            reply_text = ' ' #print?
+            reply_text = ' ' 
 
+        # get human reply
         else : 
-        # print(torch.sum(img))
             reply_text = self.get_reply()
 
     
@@ -146,7 +144,7 @@ class SafeLocalHumanAgent(LocalHumanAgent):
             raise StopIteration
 
         # set reply text
-        reply['text'] = reply_text #here
+        reply['text'] = reply_text 
 
         # check if finished
         if '[EXIT]' in reply_text:

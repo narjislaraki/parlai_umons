@@ -57,10 +57,11 @@ class MessageSocketHandler(WebSocketHandler):
                 See `WebsocketAgent.put_data` for more information about the
                 attachment dict structure.
         """
-        logging.info('websocket message from client: {}'.format(message_text))
+        # logging.info('websocket message from client: {}'.format(message_text))
         message = json.loads(message_text)
         message = {
             'text': message.get('text', ''),
+            'image': message.get('image', ''),
             'payload': message.get('payload'),
             'sender': {'id': self.sid},
             'recipient': {'id': 0},
