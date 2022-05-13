@@ -2157,7 +2157,7 @@ class TorchAgent(ABC, Agent):
         """
         # clear local metrics before anything else
         self._local_metrics.clear()
-
+        print("act model ???")
         # create a batch from the vectors
         if isinstance(observations, Batch):
             # it may already be batchified by a background worker

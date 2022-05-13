@@ -139,7 +139,6 @@ class Generator(ParlaiScript):
                 for _, text, title in batch_passages
             ]
             # we call batchify here rather than _pad_tensor directly.
-            print("generate_dense_embeddings here !!!!")
             batch = agent.batchify(batch_msgs)
             if self.use_cuda:
                 batch = batch.to('cuda')

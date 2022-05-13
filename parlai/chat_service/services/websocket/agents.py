@@ -5,8 +5,12 @@
 # LICENSE file in the root directory of this source tree.
 
 import logging
-from parlai.chat_service.core.agents import ChatServiceAgent
+import json
+import base64
+import tempfile
 
+from parlai.core.image_featurizers import ImageLoader 
+from parlai.chat_service.core.agents import ChatServiceAgent
 
 class WebsocketAgent(ChatServiceAgent):
     """
@@ -66,14 +70,13 @@ class WebsocketAgent(ChatServiceAgent):
             message: dict. An incoming websocket message. See the chat_services
                 README for the message structure.
         """
-        import json
-        from parlai.core.image_featurizers import ImageLoader #important
-        from parlai.chat_service.utils.image import ImageInformation
         
-        logging.info(f"Received new message: {message}")
+        # logging.info(f"Received new message: {message}")
         
-        body = json.loads(message.get('text',{}))
-    
+        body = message
+        if  "image" in message.get('text'):
+            body = json.loads(message.get('text',{}))
+
         action = {
             'episode_done': False,
             'text': body.get('text', ''),
@@ -81,13 +84,14 @@ class WebsocketAgent(ChatServiceAgent):
 
         body_image = body.get('image', '')
         if body_image != '':        
-            imgLoader = ImageLoader(opt=self.opt['config']['world_opt']['models']['multimodal_blenderbot'])
-            img_info = ImageInformation('', '', body_image)
-            img_path = "/home/DelbrouckJB/narjis/ParlAI/parlai/chat_service/data/image_chat.jpeg"
-            img_info.save_picture(img_path)
-            action['text'] = ''
-            action['image'] = imgLoader.load(img_path)
-
+            
+            img_loader = ImageLoader(opt=self.opt['config']['world_opt']['models']['multimodal_blenderbot'])
+            with tempfile.NamedTemporaryFile(mode="wb") as jpg:
+                jpg.write(base64.b64decode(body_image))
+                print(jpg.name)
+                action['text'] = ''
+                action['image'] = img_loader.load(jpg.name)
+                print("action = ", action)
 
         self._queue_action(action, self.action_id)
         self.action_id += 1

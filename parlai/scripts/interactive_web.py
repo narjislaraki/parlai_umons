@@ -200,6 +200,7 @@ WEB_HTML = """
                     // reset values
                     uploaded_image = "";
                     img_path = "";
+                    data = "";
                     document.getElementsByClassName("file-text")[0].innerHTML = "Choose a file...";
                     document.getElementById('userIn').disabled = false;
 
